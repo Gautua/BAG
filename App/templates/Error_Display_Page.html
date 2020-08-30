@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <link href="../static/css/Font_Montserrat.css" rel="stylesheet">
+        <title>
+Error Report Display
+        </title>
+    </head>
+    <body>
+        <p style=" color:white; font-family:Montserrat;text-align:center;font-size: 40px;"> Error Report</p>
+        <p style=" color:white; font-family:Montserrat;text-align:center;font-size: 15px;"> This page contains a report on the Errors found in the uploaded file.</p>
+        <p style=" color:white; font-family:Montserrat;text-align:center;padding-top: 30px; font-size: 20px;"> Errors will be highlighted in the Downlaoded File according the Key given below:</p>
+        
+        <div  class="box red" style="position: absolute; left:600px;top: 210px;"></div>
+        <div style="text-align: center; "><p style="color: white;  font-family:Montserrat;">Missing Values </p></div>   
+        <div  class="box yellow" style="position: absolute; left:600px;top: 240px;"></div>
+        <div style="text-align: center; "><p style="color: white;  font-family:Montserrat;">Spelling Errors </p></div>   
+        <div>
+            <p style=" color:white; font-family:Montserrat;text-align:center;font-size: 18px;"> Summary of the Missing Values in the Dataset</p>
+        
+            <!-- <pre  style="font-size: large; position: absolute; top: 400px; left:600px ; color: white; "> -->
+                <pre  style="font-size: large; text-align: center; color: white; ">
+                {{summary}}
+            </pre>
+            <p style=" color:white; font-family:Montserrat;text-align:center;font-size: 18px;">Postion of Each error present the the give Dataset</p>
+            
+            <pre  style="font-size: large; text-align: center; color: white; ">
+            <!-- <pre  style="font-size: large; position: absolute; top: 600px; left:600px ; color: white; "> -->
+                {{text}}
+            </pre>
+        </div>
+    </body>
+</html>  
+<style>
+    body
+    {
+    background-color: black;
+    }
+    .box{
+	width:100px;
+	height:20px;
+}
+ 
+.red{
+	background:#FF0000;
+}
+.yellow{
+	background:#FFEE08;
+}
+</style>

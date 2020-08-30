@@ -1,0 +1,11 @@
+
+Percentage of Missing Data: 1%
+Roll no                         0
+gender                          0
+race/ethnicity                  0
+parental level of education     0
+lunch                           2
+test preparation course         3
+math score                     11
+reading score                   6
+writing score                   3

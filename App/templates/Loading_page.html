@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="../static/css/Font_Montserrat.css" rel="stylesheet">
+  <link rel="shortcut icon" href=" ">
+  <title>Loader</title>
+</head>
+<script>
+
+  var _validFileExtensions = [".xlsx", ".csv"];    
+  function ValidateSingleInput(oInput) {
+      if (oInput.type == "file") {
+          var sFileName = oInput.value;
+           if (sFileName.length > 0) {
+              var blnValid = false;
+              for (var j = 0; j < _validFileExtensions.length; j++) {
+                  var sCurExtension = _validFileExtensions[j];
+                  if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                      blnValid = true;
+                      break;
+                  }
+              }
+               
+              if (!blnValid) {
+                  alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                  oInput.value = "";
+                  return false;
+              }
+          }
+      }
+      return true;
+  }
+  </script>
+  <body>
+    <div style="display: block; color: #ffffff;">
+    <p style="font-family:Montserrat;text-align:center;font-size: 40px;"> Upload and Download</p>
+    <ul style="font-size: 15px;text-align:center;list-style-type: none;margin: 0px;font-family:Montserrat;">
+    <li>Choose a file you want to upload</li>  
+     <li>Please note- All files must be in .xlsx or.csv</li> 
+    <li>Once the file is uploaded , the final file will be automatically Downoaded</li>
+  </ul>
+
+  </div>
+<div  id="upload_form" style="display: none; position: absolute; top: 300px; width: 98%; left: 10px;">
+<form id="upload" action="/upload_file"  method="POST" enctype="multipart/form-data">
+  <!-- DragnDrop -->
+  
+  <fieldset>	
+  <legend style="color: #ffffff;"> Upload</legend>
+  <div>
+    <label  style="color: #ffffff;" for="fileselect" >Files to upload:</label>
+    <input type="file" id="fileselect" name="excel_file" multiple="false" onchange="ValidateSingleInput(this)" />
+    <div id="filedrag" >or drop files here</div>
+  </div>
+  
+  <div id="submitbutton">
+    <button type="submit" >Upload Files</button>
+  </div>
+  
+  </fieldset>
+  
+  </form>
+  
+  <div style="color: #ffffff;" id="messages">
+  <p>Status Messages</p>
+  </div>
+  <p style="display: block; font-family: Montserrat; color: white; text-align: center;"> To View the Error Report please use the link given below:</p> 
+  <a id="Error_" style="display: block; font-family: Montserrat; color: white; text-align: center;" href="/Error_Report" > View Error Report</a>
+</div>
+ 
+
+
+<div id="Loader_icon" class="dl">
+  <div class="dl__container">
+    <div class="dl__corner--top"></div>
+    <div class="dl__corner--bottom"></div>
+  </div>
+  <div class="dl__square"></div>
+</div>
+
+
+</body>
+<style>
+  #filedrag
+  {
+    display: none;
+    font-weight: bold;
+    text-align: center;
+    padding: 1em 0;
+    margin: 1em 0;
+    color: #ffffff;
+    border: 2px dashed #ffffff;
+    border-radius: 7px;
+    cursor: default;
+  }
+  
+  #filedrag.hover
+  {
+    color:white;
+    border-color:white;
+    border-style: solid;
+    box-shadow: whitesmoke;
+  }
+  
+  </style>
+  
+  <script>
+  // getElementById
+  function $id(id) {
+    return document.getElementById(id);
+  }
+  
+  //
+  // output information
+  function Output(msg) {
+    var m = $id("messages");
+    m.innerHTML = msg + m.innerHTML;
+  }
+  
+  // call initialization file
+  if (window.File && window.FileList && window.FileReader) {
+    Init();
+  }
+  
+  //
+  // initialize
+  function Init() {
+  
+    var fileselect = $id("fileselect"),
+      filedrag = $id("filedrag"),
+      submitbutton = $id("submitbutton");
+  
+    // file select
+    fileselect.addEventListener("change", FileSelectHandler, false);
+  
+    // is XHR2 available?
+    var xhr = new XMLHttpRequest();
+    if (xhr.upload) {
+    
+      // file drop
+      filedrag.addEventListener("dragover", FileDragHover, false);
+      filedrag.addEventListener("dragleave", FileDragHover, false);
+      filedrag.addEventListener("drop", FileSelectHandler, false);
+      filedrag.style.display = "block";
+      
+      // remove submit button
+      submitbutton.style.display = "block";
+    }
+  
+  }
+  // file drag hover
+  function FileDragHover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.target.className = (e.type == "dragover" ? "hover" : "");
+  }
+  // file selection
+  function FileSelectHandler(e) {
+  
+    // cancel event and hover styling
+    FileDragHover(e);
+  
+    // fetch FileList object
+    var files = e.target.files || e.dataTransfer.files;
+  
+    // process all File objects
+     for (var i = 0, f; f = files[i]; i++) {
+      if(f.type=="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"|| f.type=="application/vnd.ms-excel")
+    {ParseFile(f)}
+    else{
+      alert("Sorry, " + f.name + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+    }
+  
+     }
+  }
+  function ParseFile(file) {
+    Output(
+      "<p>File information: <strong>" + file.name +
+      "</strong> type: <strong>" + file.type +
+      "</strong> size: <strong>" + file.size +
+      "</strong> bytes</p>"
+    );
+      
+  }
+  
+  
+  </script>  
+<style>
+body {
+  background-color: #000000;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+@-webkit-keyframes dyinglight {
+  15% {
+    -webkit-transform: scale(1.7);
+            transform: scale(1.7);
+  }
+  50% {
+    -webkit-transform: rotate(-89deg);
+            transform: rotate(-89deg);
+  }
+  100% {
+    -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+  }
+}
+
+@keyframes dyinglight {
+  15% {
+    -webkit-transform: scale(1.7);
+            transform: scale(1.7);
+  }
+  50% {
+    -webkit-transform: rotate(-89deg);
+            transform: rotate(-89deg);
+  }
+  100% {
+    -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+  }
+}
+.dl {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  display: inline-block;
+}
+
+.dl__square {
+  display: block;
+  width: 75px;
+  height: 75px;
+  background: #ffffff;
+}
+
+.dl__container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  -webkit-transform-origin: 50% 50% 0;
+          transform-origin: 50% 50% 0;
+  -webkit-animation: dyinglight 1.1s ease infinite;
+          animation: dyinglight 1.1s ease infinite;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.dl__corner--top:before,
+.dl__corner--top:after,
+.dl__corner--bottom:before,
+.dl__corner--bottom:after {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  color: #ffffff;
+  content: "";
+}
+
+.dl__corner--top:before {
+  border-left: 1px solid;
+  border-top: 1px solid;
+  top: -6px;
+  left: -6px;
+}
+.dl__corner--top:after {
+  border-right: 1px solid;
+  border-top: 1px solid;
+  top: -6px;
+  right: -6px;
+}
+
+.dl__corner--bottom:before {
+  border-left: 1px solid;
+  border-bottom: 1px solid;
+  bottom: -6px;
+  left: -6px;
+}
+.dl__corner--bottom:after {
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  bottom: -6px;
+  right: -6px;
+}
+</style>
+<script>
+setTimeout(function()
+{
+document.getElementById('upload_form').style.display="block";
+},2500);
+
+setTimeout(function()
+{
+document.getElementById('Loader_icon').style.display="none";
+},2500);
+
+</script>
+</html>
