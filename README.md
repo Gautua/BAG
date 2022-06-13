@@ -20,4 +20,8 @@ Datsets are in the csv format
   <img alt="Dark" src="visuals/About%20the%20team.PNG" width="45%">
 </p>
 
+## GIFs
+
+![project](https://user-images.githubusercontent.com/44651606/173369978-68e9558c-85aa-4c80-a893-a62445f6d6d3.gif)
+
 Currently on hold...
